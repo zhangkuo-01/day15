@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiaoshu.dao.StudentMapper">
+<select id="countStudent" resultType="StudentVo">
+		SELECT t.name cname,COUNT(s.id) num FROM student s RIGHT JOIN teacher t ON s.teacherid=t.id GROUP BY t.id
+	</select>
+	<select id="findStudentVoAll" parameterType="StudentVo" resultType="StudentVo">
+		SELECT s.*,t.name cname FROM student s,teacher t WHERE s.teacherid=t.id
+		<if test="name!=null and name!=''">
+			and s.name like '%${name}%'
+		</if>
+		<if test="teacherid!=null and teacherid!=0">
+			and s.teacherid=#{teacherid}
+		</if>
+		<if test="start!=null">
+			and s.entrytime &gt;= #{start}
+		</if>
+		<if test="end!=null">
+			and s.entrytime &lt;= #{end}
+		</if>
+	</select>
+
+  <resultMap id="BaseResultMap" type="com.xiaoshu.entity.Student">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="teacherid" jdbcType="INTEGER" property="teacherid" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="age" jdbcType="VARCHAR" property="age" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="grade" jdbcType="VARCHAR" property="grade" />
+    <result column="entrytime" jdbcType="TIMESTAMP" property="entrytime" />
+    <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    id, teacherid, name, age, code, grade, entrytime, createtime
+  </sql>
+</mapper>
